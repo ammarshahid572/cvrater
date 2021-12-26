@@ -1,0 +1,23 @@
+<html>
+<head>
+</head>
+<bod>
+<table>
+<tr>
+	<th> Name </th>
+	<th> Years </th>
+	<th> Skills </th>
+	<th> Languages </th>
+	<th> Score </th>
+	<th> Link </th>
+</tr>
+{% for x in output %} 
+<tr>
+	<td>{{x[0]}}</td>
+	<td>{{x[1]}}</td>
+	<td>{{x[2]}}</td>
+	<td>{{x[3]}}</td>
+	<td>{{x[4]}}</td>
+	<td><a href="/CVs/{{ x[5] }}"> {{x[5]}}</a></td>
+</tr>
+{% endfor %} 

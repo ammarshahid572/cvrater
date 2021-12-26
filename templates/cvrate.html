@@ -1,0 +1,25 @@
+<!doctype html>
+        <title>Rate</title>
+        <h1>Rate CVs</h1>
+        <form method="post" action="/cvrate" enctype=multipart/form-data>
+		<label for="keywords"> Field Keywords (separate by commas)</label>
+          <input type=text name="keywords" id="keywords"> <br>
+		<label for="experience">Choose a Experience:</label>
+		<select id="experience" name="experience">
+				<option value="1">Less than 1 years</option>
+				<option value="2">1 to 3 years</option>
+				<option value="3">3 to 10 years</option>
+				<option value="4">Above 10 years</option>
+		</select>
+		<label for="dept">Choose relevant Dept:</label>
+		<select id="dept" name="dept">
+				<option value= "HR" > Human Resources </option>
+				<option value= "AD" > Admin </option>
+				<option value= "FIN" > Finances </option>
+				<option value= "DEV" > Development </option>
+				<option value= "IT" > IT </option>
+		</select>
+		<label for="addKeys">Additional Keywords (Location, Languages)</label>
+		<input type=text name="addKeys" id="addKeys"> <br>
+          <input type=submit value=submit>
+        </form>
