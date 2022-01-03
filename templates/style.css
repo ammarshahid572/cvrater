@@ -1,7 +1,4 @@
-<!doctype html>
-<head>
-	<style>
-		form{
+form{
     margin: auto;
     align-items: center;
     text-align: center;
@@ -59,30 +56,26 @@ a:link, a:visited {
       margin:auto;
     background-color:  #187fe6;
   }
-	</style>
 
-        <title>Rate</title>
-	</head>
-        <h1>Rate CVs</h1>
-        <form method="post" action="/cvrate" enctype=multipart/form-data>
-          <input type=text name="keywords" id="keywords" placeholder="Field Keywords (separate by commas)"> <br>
-
-		<select id="experience" name="experience" >
-			<option value="" disabled selected>Choose a Experience</option>	
-			<option value="1">Less than 1 years</option>
-				<option value="2">1 to 3 years</option>
-				<option value="3">3 to 10 years</option>
-				<option value="4">Above 10 years</option>
-		</select><br>
-		
-		<select id="dept" name="dept">
-			<option value="" disabled selected>Choose Relevant Department</option>	
-				<option value= "HR" > Human Resources </option>
-				<option value= "AD" > Admin </option>
-				<option value= "FIN" > Finances </option>
-				<option value= "DEV" > Development </option>
-				<option value= "IT" > IT </option>
-		</select><br>
-		<input type=text name="addKeys" id="addKeys" placeholder="Additional Keywords (Location, Languages)"> <br>
-          <input type=submit value=SEARCH>
-        </form>
+  .tableDisplay {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  .tableDisplay td, .tableDisplay th {
+    border: 1px solid rgba(221, 221, 221, 0.699);
+    padding: 8px;
+  }
+  
+  .tableDisplay tr:nth-child(even){background-color: #f2f2f2;}
+  
+  .tableDisplay tr:hover {background-color: #ddd;}
+  
+  .tableDisplay th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #3604aa;
+    color: white;
+  }

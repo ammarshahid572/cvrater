@@ -2,7 +2,7 @@ from docx import Document
 import re
 
 def expExtract(docx):
-    doc = Document('docx1.docx')
+    doc = Document(docx)
 
     nPara= len(doc.paragraphs)
 
@@ -13,7 +13,19 @@ def expExtract(docx):
     expEnd=0
     skillStart=0
     skillEnd=0
-
+    introStart=0
+    introEnd=0
+    # Seperating intro
+    for i, para in enumerate(doc.paragraphs):
+        paratext=doc.paragraphs[i].text.lower()
+           
+        for j in topics:
+            if re.search(j,paratext)!=None:
+                if j!="intro":
+                    introEnd=i
+                break
+        if introEnd>0:
+            break
     #Seperating experience
     for i, para in enumerate(doc.paragraphs):
         paratext=doc.paragraphs[i].text.lower()
@@ -75,6 +87,11 @@ def expExtract(docx):
         txt=doc.paragraphs[i].text
         rawSkill=rawSkill+"\n"+txt
 
+    intro=""
+    for i in range(introStart,introEnd):
+        txt=doc.paragraphs[i].text
+        intro=intro+"\n"+txt
+
 #raw CV for additional Keywords
     rawCV=""
     for i, para in enumerate(doc.paragraphs):
@@ -83,10 +100,12 @@ def expExtract(docx):
 
 
 
-    return years,rawExp, rawSkill, rawLang, rawCV
+    return intro,years,rawExp, rawSkill, rawLang, rawCV
 
 if __name__=="__main__":
-    yr,exp,ski,lang,raw=expExtract('docx1.docx')
+    intro,yr,exp,ski,lang,raw=expExtract('docx1.docx')
+    print(intro)
+    print("--------------------------------")
     print(yr)
     print("-----------Experience----------")
     print(exp)

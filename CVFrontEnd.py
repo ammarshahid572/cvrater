@@ -1,7 +1,7 @@
 import os
 import json
 import re
-from flask import Flask, flash, request, redirect, url_for, render_template, session
+from flask import Flask, flash, request, redirect, url_for, render_template, session, send_from_directory
 from werkzeug.utils import secure_filename
 from flask_session import Session
 from expExtraction import expExtract
@@ -32,9 +32,9 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-def insertToDb(name, dept, yr, exp, ski, lan, raw, filename):
+def insertToDb(intro, dept, yr, exp, ski, lan, raw, filename):
     mycursor = mydb.cursor()
-    query= "INSERT INTO `cvs` (`name`, `dept`, `years`, `rawExp`, `rawSki`, `lang`, `raw`, `cvlink`) VALUES ( \"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(name, dept, str(yr), exp, ski, lan, raw, filename)
+    query= "INSERT INTO `cvs` (`intro`, `dept`, `years`, `rawExp`, `rawSki`, `lang`, `raw`, `cvlink`) VALUES ( \"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(intro, dept, str(yr), exp, ski, lan, raw, filename)
     print(query)
     #values=(name, dept, str(yr), exp, ski, lan, filename)
     mycursor.execute(query)
@@ -72,24 +72,7 @@ def login():
 
 @app.route('/upload')
 def form():
-    form='''
-        <!doctype html>
-        <title>Upload a CV</title>
-        <h1>Upload a CV</h1>
-        <form method=post action="/file" enctype=multipart/form-data>
-        <input type="text" id="name" name="name" placeholder="Applicant Name">
-        <label for="dept">Choose relevant Dept:</label>
-		<select id="dept" name="dept">
-				<option value= "HR" > Human Resources </option>
-				<option value= "AD" > Admin </option>
-				<option value= "FIN" > Finances </option>
-				<option value= "DEV" > Development </option>
-				<option value= "IT" > IT </option>
-          <input type=file name=file>
-          <input type=submit value=Upload>
-        </form>
-        '''
-    return form 
+    return render_template('uploadform.html') 
 
 @app.route('/cvrate', methods=["POST", "GET"])
 def cvrate():
@@ -190,7 +173,7 @@ def cvSort(myresult, keywords, experience, dept, addkeys):
 
 def rankingHtml(keywords, experience, dept, addKeys):
     mycursor = mydb.cursor()
-    query= "SELECT id, name,years, rawExp, rawSki, lang, raw , cvlink FROM cvs WHERE dept='{}'".format(dept)
+    query= "SELECT id, intro, years, rawExp, rawSki, lang, raw , cvlink FROM cvs WHERE dept='{}'".format(dept)
     mycursor.execute(query)
     myresult = mycursor.fetchall()
     output_list=cvSort(myresult,keywords, experience, dept, addKeys)
@@ -199,32 +182,40 @@ def rankingHtml(keywords, experience, dept, addKeys):
 
         
 
+@app.route('/CVs/<path:filename>', methods=['GET', 'POST'])
+def download(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'],
+                               filename, as_attachment=True)
+
+@app.route('/style.css', methods=['GET', 'POST'])
+def stylesheet():
+    return render_template('style.css')
+    
 @app.route('/file', methods=['GET', 'POST'])
 def upload_file():
     exp=0
     filename=""
     if request.method == 'POST':
         # check if the post request has the file part
-        if 'file' not in request.files:
-            flash('No file part')
+        uploaded_files = request.files.getlist("file[]")
+        print (uploaded_files)
+        if len(uploaded_files)==0:
             print("No file part")
             return redirect(request.url)
-        file = request.files['file']
-        # If the user does not select a file, the browser submits an
-        # empty file without a filename.
-        if file.filename == '':
-            flash('No selected file')
-            print("no file selected")
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
-            name= request.form.get("name")
-            dept= request.form.get("dept")
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            #return redirect(url_for('upload_file', name=filename))
-            yr,exp,ski,lang,raw=expExtract(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            insertToDb(name, dept, yr, exp, ski, lang, raw, filename)
-    return "file:"+filename+" uploaded Experience Extracted:"+str(exp)
+        files_processed=[]
+        for file in uploaded_files:
+            if file and allowed_file(file.filename):
+                files_processed.append(file.filename)
+                name="placeholder"
+                dept= request.form.get("dept")
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                intro,yr,exp,ski,lang,raw=expExtract(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                insertToDb(intro, dept, yr, exp, ski, lang, raw, filename)
+                
+##    return "file:"+filename+" uploaded"
+    print(files_processed)
+    return "Files uploded"+ str(files_processed)
 
 
 
