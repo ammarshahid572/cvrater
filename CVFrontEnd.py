@@ -68,11 +68,25 @@ def login():
                 return redirect("/")
     return render_template("login.html")
 
+@app.route("/signup", methods=["POST", "GET"])
+def signup():
+    if request.method == "POST":
+        # record the user name
+        email= request.form.get("email")
+        username= request.form.get("username")
+        password= request.form.get("password")
+
+        mycursor = mydb.cursor()
+        query= "INSERT INTO login (`id`, `username`, `password`, `email`) VALUES ('{}','{}', '{}')".format(username,password, email)
+        mycursor.execute(query)
+        myresult = mycursor.fetchall()
+        return redirect("/")
+    return render_template("signup.html")
 
 
 @app.route('/upload')
 def form():
-    return render_template('uploadform.html') 
+    return render_template('uploadform.html', username= session.get("username")) 
 
 @app.route('/cvrate', methods=["POST", "GET"])
 def cvrate():
@@ -82,7 +96,7 @@ def cvrate():
         dept=request.form.get("dept")
         addKeys=request.form.get("addKeys")
         return rankingHtml(keywords, experience, dept, addKeys)
-    return render_template('cvrate.html')
+    return render_template('cvrate.html',username=session.get("username"))
 
 
 
@@ -178,7 +192,7 @@ def rankingHtml(keywords, experience, dept, addKeys):
     myresult = mycursor.fetchall()
     output_list=cvSort(myresult,keywords, experience, dept, addKeys)
     
-    return render_template('ratedCV.html',output=output_list)
+    return render_template('ratedCV.html',output=output_list, username=session.get("username"))
 
         
 

@@ -13,14 +13,19 @@ input[type="text"],
 input[type="email"],
 input[type="file"],
 		 select {
-			width: 100%;
+      box-shadow: 2px 2px gray;
+      border-radius: 25px;
+      margin:auto;
+			width: 300px;
 			padding: 15px;
 			border: 1px solid #dddddd;
 			margin-bottom: 15px;
 			box-sizing:border-box;
 		}
 input[type="submit"] {
-			width: 100%;
+      box-shadow: 2px 2px gray;
+      border-radius: 25px;
+			width: 300px;
 			padding: 15px;
 			background-color: #187fe6;
 			border: 0;
@@ -30,20 +35,18 @@ input[type="submit"] {
 			color: #ffffff;
 		}
 
-h1{ 
+.logo h1{ 
+    color: rgb(14,81,134);
+    text-shadow: 2px 2px gray;
     margin: auto;
     text-align: center;
-    border-style: dashed;
-    border: double;
-    font-family: 'Times New Roman', Times, serif;
-    text-decoration: underline;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
     padding: 20px;
 }
 
 a:link, a:visited {
     align-items: center;
     margin: auto;
-    background-color: #060061;
     color: white;
     padding: 14px 25px;
     text-align: center;
@@ -60,22 +63,68 @@ a:link, a:visited {
   .tableDisplay {
     font-family: Arial, Helvetica, sans-serif;
     border-collapse: collapse;
-    width: 100%;
+    width: 70%;
+    position: absolute;
+    top: 20%;
+    right: 15%
+
   }
   
   .tableDisplay td, .tableDisplay th {
-    border: 1px solid rgba(221, 221, 221, 0.699);
+    border: 1px solid rgb(255, 255, 255);
     padding: 8px;
   }
-  
-  .tableDisplay tr:nth-child(even){background-color: #f2f2f2;}
-  
+    
   .tableDisplay tr:hover {background-color: #ddd;}
   
-  .tableDisplay th {
+  .tableDisplay th, td {
     padding-top: 12px;
     padding-bottom: 12px;
     text-align: left;
-    background-color: #3604aa;
+    background-color: #042C5F;
     color: white;
+  }
+
+  .tableLink a{
+    background-color: none;
+  }
+
+  .bg-image {
+    z-index: 0;
+    /* The image used */
+    background-image: url("https://cutewallpaper.org/21/blue-vector-background/Beautiful-Blue-Geometric-Technological-Background-Vector-.png");
+    
+    /* Add the blur effect */
+    /* Full height */
+    height: 100%; 
+    
+    filter:contrast(200%);
+    -webkit-filter:contrast(200%);
+    
+    
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  .content-item{
+    background-color: rgb(255, 255, 255); /* Fallback color */
+    background-color: rgba(255, 255, 255, 0.4); /* Black w/opacity/see-through */
+    color: white;
+    font-weight: bold;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    width: 60%;
+    padding: 20px;
+    text-align: center;
+  }
+  .topNav{
+    z-index: 2;
+    position:absolute;
+    top:0%;
+    width:99%;
+    background-color: rgb(2,42,93);
   }

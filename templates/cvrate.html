@@ -1,88 +1,40 @@
-<!doctype html>
+
+
 <head>
-	<style>
-		form{
-    margin: auto;
-    align-items: center;
-    text-align: center;
-    font-size: medium;
-    font-family: 'Times New Roman', Times, serif;
-    font-weight: bold;
-    border-width: medium;
-    padding: 5%;
-}
-input[type="password"],
-input[type="text"],
-input[type="email"],
-input[type="file"],
-		 select {
-			width: 100%;
-			padding: 15px;
-			border: 1px solid #dddddd;
-			margin-bottom: 15px;
-			box-sizing:border-box;
-		}
-input[type="submit"] {
-			width: 100%;
-			padding: 15px;
-			background-color: #187fe6;
-			border: 0;
-			box-sizing: border-box;
-			cursor: pointer;
-			font-weight: bold;
-			color: #ffffff;
-		}
+	<title>Rate</title>
+	<link rel="stylesheet" href="/style.css">
+</head>
+<div class="topNav">
+ <img src="/static/logo-solo.png" style="width: 50px; height: 50px; float: left; margin-left: 30px;"> 
+ <p style="float: left; color: white; font-family: Arial, Helvetica, sans-serif; margin-left: 10px;"><b>Intelligent Resume Classifier</b></p>
+  <p style="float: right; color: white;"> {{username}}</p>
+</div>
+<div class="bg-image">
+</div>
 
-h1{ 
-    margin: auto;
-    text-align: center;
-    border-style: dashed;
-    border: double;
-    font-family: 'Times New Roman', Times, serif;
-    text-decoration: underline;
-    padding: 20px;
-}
+<div class="content-item">
+	<h1 style="color:rgb(8, 8, 201)">Rate CVs</h1> 
+<form method="post" action="/cvrate" enctype=multipart/form-data>
+	
+	<input type=text name="keywords" id="keywords" placeholder="Field Keywords (separate by commas)"> <br>
 
-a:link, a:visited {
-    align-items: center;
-    margin: auto;
-    background-color: #060061;
-    color: white;
-    padding: 14px 25px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-  }
-  
-  a:hover, a:active {
-      align-items: center;
-      margin:auto;
-    background-color:  #187fe6;
-  }
-	</style>
+	<select id="experience" name="experience">
+		<option value="" disabled selected>Choose a Experience</option>
+		<option value="1">Less than 1 years</option>
+		<option value="2">1 to 3 years</option>
+		<option value="3">3 to 10 years</option>
+		<option value="4">Above 10 years</option>
+	</select><br>
 
-        <title>Rate</title>
-	</head>
-        <h1>Rate CVs</h1>
-        <form method="post" action="/cvrate" enctype=multipart/form-data>
-          <input type=text name="keywords" id="keywords" placeholder="Field Keywords (separate by commas)"> <br>
-
-		<select id="experience" name="experience" >
-			<option value="" disabled selected>Choose a Experience</option>	
-			<option value="1">Less than 1 years</option>
-				<option value="2">1 to 3 years</option>
-				<option value="3">3 to 10 years</option>
-				<option value="4">Above 10 years</option>
-		</select><br>
-		
-		<select id="dept" name="dept">
-			<option value="" disabled selected>Choose Relevant Department</option>	
-				<option value= "HR" > Human Resources </option>
-				<option value= "AD" > Admin </option>
-				<option value= "FIN" > Finances </option>
-				<option value= "DEV" > Development </option>
-				<option value= "IT" > IT </option>
-		</select><br>
-		<input type=text name="addKeys" id="addKeys" placeholder="Additional Keywords (Location, Languages)"> <br>
-          <input type=submit value=SEARCH>
-        </form>
+	<select id="dept" name="dept">
+		<option value="" disabled selected>Choose Relevant Department</option>
+		<option value="HR"> Human Resources </option>
+		<option value="AD"> Admin </option>
+		<option value="FIN"> Finances </option>
+		<option value="DEV"> Development </option>
+		<option value="IT"> IT </option>
+	</select><br>
+	<input type=text name="addKeys" id="addKeys" placeholder="Additional Keywords (Location, Languages)"> <br>
+	<input type=submit value=SEARCH>
+</form>
+</div>
