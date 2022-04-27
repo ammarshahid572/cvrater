@@ -1,8 +1,10 @@
+from requests import head
 from selenium import webdriver
 from bs4 import BeautifulSoup
 import time
-username="your username"
-password="your password"
+import re
+usernameK="#############"
+password="###############"
 # Creating a webdriver instance
 driver = webdriver.Chrome(r"/ChromeDriver/chromedriver.exe")
 # This instance will be used to log into LinkedIn
@@ -12,7 +14,7 @@ driver.get("https://linkedin.com/uas/login")
   
 # waiting for the page to load
 time.sleep(3)
-  
+
 # entering username
 username = driver.find_element_by_id("username")
   
@@ -20,7 +22,7 @@ username = driver.find_element_by_id("username")
 # tag used here.
   
 # Enter Your Email Address
-username.send_keys(username)  
+username.send_keys(usernameK)  
   
 # entering password
 pword = driver.find_element_by_id("password")
@@ -83,6 +85,39 @@ for section in sections:
     title=title[-1].decode_contents()
     title=title.replace("<!-- -->","")
     print(title)
+    if "experience" in title.lower():
+        print("Experience Found")
+        lists=section.find_all('ul')
+        totalyears=0
+        totalmonths=0
+        for ul in lists:
+            subLists=ul.find_all('li',{"class":"artdeco-list__item pvs-list__item--line-separated pvs-list__item--one-column"})
+            for subList in subLists:
+                spans=subList.find_all("span", {"class":"visually-hidden"})
+                years= spans[2].decode_contents().replace("<!-- -->","")
+                print(years)
+                months=re.findall('[0-9] mos', years)
+                years=re.findall('[0-9] yr', years)
+               
+                if years:
+                    years=years[0].replace(" yr", "")
+                    months=months[0].replace(" mos", "")
+                    totalmonths+=int(months)
+                    totalyears+=int(years)
+        totalyears=totalyears+(totalmonths/12)
+        print("Total years {}".format(totalyears))
+    elif "skills" in title.lower():
+        print("Skills Found")
+        lists=section.find_all('ul')
+        totalyears=0
+        totalmonths=0
+        for ul in lists:
+            subLists=ul.find_all('li',{"class":"artdeco-list__item pvs-list__item--line-separated pvs-list__item--one-column"})
+            for subList in subLists:
+                spans=subList.find_all("span", {"class":"visually-hidden"})
+                for span in spans:
+                    data= span.decode_contents().replace("<!-- -->","")
+                    print(data)
     print("########")
     #Check for list items
     lists=section.find_all('ul')

@@ -5,6 +5,7 @@ from flask import Flask, flash, request, redirect, url_for, render_template, ses
 from werkzeug.utils import secure_filename
 from flask_session import Session
 from expExtraction import expExtract
+from linkedInscraper import linkedinScrape
 UPLOAD_FOLDER = 'D:\\Python\\Flask\\FlaskFIles'
 ALLOWED_EXTENSIONS = {'docx'}
 
@@ -33,7 +34,7 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def insertToDb(intro, dept, yr, exp, ski, lan, raw, filename):
-    mycursor = mydb.cursor()
+    mycursor = mydb.cursor(buffered=True)
     query= "INSERT INTO `cvs` (`intro`, `dept`, `years`, `rawExp`, `rawSki`, `lang`, `raw`, `cvlink`) VALUES ( \"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(intro, dept, str(yr), exp, ski, lan, raw, filename)
     print(query)
     #values=(name, dept, str(yr), exp, ski, lan, filename)
@@ -49,7 +50,10 @@ def index():
     if not session.get("username"):
         # if not there in the session then redirect to the login page
         return redirect("/login")
-    return render_template('index.html',username=session.get("username"))
+    if session.get("usertype")=="admin":
+        return render_template('index.html',username=session.get("username"))
+    else:
+        return render_template('appli.html', username=session.get("username"))
   
   
 @app.route("/login", methods=["POST", "GET"])
@@ -62,9 +66,11 @@ def login():
         mycursor = mydb.cursor()
         query= "SELECT * FROM login WHERE username= '{}' AND password='{}'".format(username,password)
         mycursor.execute(query)
-        myresult = mycursor.fetchall()
+        myresult = mycursor.fetchone()
+        print(myresult)
         if myresult:
                 session["username"]=username
+                session["usertype"]= myresult[4]
                 return redirect("/")
     return render_template("login.html")
 
@@ -75,9 +81,9 @@ def signup():
         email= request.form.get("email")
         username= request.form.get("username")
         password= request.form.get("password")
-
+        user_type= request.form.get("user_type")
         mycursor = mydb.cursor()
-        query= "INSERT INTO login (`id`, `username`, `password`, `email`) VALUES ('{}','{}', '{}')".format(username,password, email)
+        query= "INSERT INTO login (`id`, `username`, `password`, `email`, `user_type`) VALUES ('{}','{}', '{}', '{}')".format(username,password, email, user_type)
         mycursor.execute(query)
         myresult = mycursor.fetchall()
         return redirect("/")
@@ -204,7 +210,20 @@ def download(filename):
 @app.route('/style.css', methods=['GET', 'POST'])
 def stylesheet():
     return render_template('style.css')
-    
+
+@app.route('/linkedin',methods=['GET', 'POST'])
+def linkedIn():
+    if request.method=='POST':
+        intro= request.form['intro']
+        lang= request.form['lang']
+        link= request.form['link']
+        dept= request.form['dept']
+        yr, exp, ski, raw= linkedinScrape(link)
+        insertToDb(intro, dept, yr, exp, ski, lang, raw, link)
+        return("Successfully uploaded Linked IN id")
+    else:
+        return render_template('linkedInForm.html',username=session.get("username"))
+        pass
 @app.route('/file', methods=['GET', 'POST'])
 def upload_file():
     exp=0
@@ -223,6 +242,7 @@ def upload_file():
                 name="placeholder"
                 dept= request.form.get("dept")
                 filename = secure_filename(file.filename)
+                filename= "/CVs/"+filename
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 intro,yr,exp,ski,lang,raw=expExtract(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 insertToDb(intro, dept, yr, exp, ski, lang, raw, filename)

@@ -9,6 +9,7 @@ form{
     padding: 5%;
 }
 input[type="password"],
+input[type="url"],
 input[type="text"],
 input[type="email"],
 input[type="file"],
