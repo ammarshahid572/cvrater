@@ -4,8 +4,8 @@ from selenium import webdriver
 from bs4 import BeautifulSoup
 import time
 import re
-usernameK="username"
-password="password"
+usernameK="usenamr"
+password="passwr"
 # Creating a webdriver instance
 driver = webdriver.Chrome(r"ChromeDriver/chromedriver.exe")
 # This instance will be used to log into LinkedIn
@@ -101,20 +101,23 @@ def  linkedinScrape(link):
                 subLists=ul.find_all('li',{"class":"artdeco-list__item pvs-list__item--line-separated pvs-list__item--one-column"})
                 for subList in subLists:
                     spans=subList.find_all("span", {"class":"visually-hidden"})
-                    
-                    years= spans[2].decode_contents().replace("<!-- -->","")
-                    
-                    print(years)
-                    months=re.findall('[0-9] mos', years)
-                    years=re.findall('[0-9] yr', years)
+                    years=""
+                    months=""
                     for span in spans:
                          experienceI= span.decode_contents().replace("<!-- -->","")
                          exp+= experienceI+"\n"
-                    if years:
-                        years=years[0].replace(" yr", "")
-                        months=months[0].replace(" mos", "")
-                        totalmonths+=int(months)
-                        totalyears+=int(years)
+                         months=re.findall('[0-9] mos', span.decode_contents())
+                         years=re.findall('[0-9] yr', span.decode_contents())
+                         print(years)
+                    
+                         if years:
+                            years=years[0].replace(" yr", "")
+                            totalyears+=int(years)
+                         if months:
+
+                            months=months[0].replace(" mos", "")
+                            totalmonths+=int(months)
+                            
             totalyears=totalyears+(totalmonths/12)
             yr=totalyears
             print("Total years {}".format(totalyears))
@@ -144,6 +147,12 @@ def  linkedinScrape(link):
                     print(item)
                     raw+=item+'\n'
                 print("xxxxxxxxxxxxxxxxxxxxxxxxxxx")
+    raw=raw.replace("'", "")
+    raw=raw.replace('"', "")
+    ski=ski.replace("'", "")
+    ski=ski.replace('"', "")
+    exp=exp.replace('"',"")
+    exp=exp.replace("'","")
     return yr, exp, ski, raw
  
 if __name__=="__main__":
