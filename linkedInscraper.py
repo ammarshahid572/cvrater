@@ -1,12 +1,13 @@
+from asyncio.windows_events import NULL
 from requests import head
 from selenium import webdriver
 from bs4 import BeautifulSoup
 import time
 import re
-usernameK="############"
-password="#############"
+usernameK="ammarshahid572@gmail.com"
+password="Iamamonster"
 # Creating a webdriver instance
-driver = webdriver.Chrome(r"/ChromeDriver/chromedriver.exe")
+driver = webdriver.Chrome(r"ChromeDriver/chromedriver.exe")
 # This instance will be used to log into LinkedIn
   
 # Opening linkedIn's login page
@@ -80,11 +81,13 @@ def  linkedinScrape(link):
     soup = BeautifulSoup(src, 'lxml')
 
 #look for all sections with card class
-    sections= soup.find_all("section", {"class": "artdeco-card ember-view break-words pb3 mt4"})
+    sections= soup.find_all("section")
     for section in sections:
         print('-----------------------')
         heading = section.find_all('div', {"class":"pvs-header__title-container"})
         print("########")
+        if not len(heading):
+            continue
         title=heading[-1].find_all('span', {"aria-hidden":"true"})
         title=title[-1].decode_contents()
         title=title.replace("<!-- -->","")

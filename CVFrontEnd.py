@@ -242,8 +242,8 @@ def upload_file():
                 name="placeholder"
                 dept= request.form.get("dept")
                 filename = secure_filename(file.filename)
-                filename= "/CVs/"+filename
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                filename= "/CVs/"+filename
                 intro,yr,exp,ski,lang,raw=expExtract(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 insertToDb(intro, dept, yr, exp, ski, lang, raw, filename)
                 
