@@ -4,6 +4,24 @@
 
         <title>Upload a CV</title>
     </head>
+    <script>
+        var xhr = new XMLHttpRequest();
+        function submitData(){
+        console.log("Posting data");
+        document.getElementById("loading").style.display="inline-block";
+        document.getElementById("tick").style.display="none";
+        xhr.open("POST", "/linkedin"); 
+        xhr.onload = function(event){
+            console.log("success"); 
+            document.getElementById("loading").style.display="none";
+            document.getElementById("tick").style.display="inline-block";
+        } ; 
+        // or onerror, onabort
+        var formData = new FormData(document.getElementById("myForm")); 
+        xhr.send(formData);
+    return false;
+}
+    </script>
     <div class="bg-image"></div>
     <div class="topNav">
         <img src="/static/logo-solo.png" style="width: 50px; height: 50px; float: left; margin-left: 30px;"> 
@@ -11,12 +29,12 @@
          <p style="float: right; color: white;"> {{username}}</p>
        </div>
     <div class="content-item">
-        <h1 style="color: black">Upload a CV</h1>
-        <form method=post action="/linkedin" enctype=multipart/form-data>
+        <h1 style="color: black">Extract from LinkedIn</h1>
+        <form id="myForm" method="post" onsubmit="return submitData();">
 		<input id="intro" name="intro" type="text" placeholder="Introduction">
         <input id="link"  name="link"  type="url" placeholder="LinkedIn URL">
         <input id="lang"  name="lang"  type="text" placeholder="Languages spoken">
-        <select id="dept" name="dept">
+        <select id="dept" name="dept" required>
             <option value="" disabled selected>Choose relevant Dept:</option>	
 				<option value= "HR" > Human Resources </option>
 				<option value= "AD" > Admin </option>
@@ -25,4 +43,8 @@
 				<option value= "IT" > IT </option>
           <input type=submit value=Upload>
         </form>
+        <img id="loading" src="/static/loader-blocks.gif" style="height: 150px; width: 300px; display: none;"> 
+    <img id="tick" src="/static/tick.png" style="height: 150px; width: 300px; display: none;"> 
     </div>
+    
+    

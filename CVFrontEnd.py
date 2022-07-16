@@ -6,14 +6,17 @@ from werkzeug.utils import secure_filename
 from flask_session import Session
 from expExtraction import expExtract
 from linkedInscraper import linkedinScrape
+from datetime import timedelta
 UPLOAD_FOLDER = 'D:\\Python\\Flask\\FlaskFIles'
 ALLOWED_EXTENSIONS = {'docx'}
+
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'CVs'
 
 
-app.config["SESSION_PERMANENT"] = False
+
+app.config['PERMANENT_SESSION_LIFETIME'] =  timedelta(minutes=5)
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
@@ -71,6 +74,7 @@ def login():
         if myresult:
                 session["username"]=username
                 session["usertype"]= myresult[4]
+                session.permanent=True
                 return redirect("/")
     return render_template("login.html")
 
@@ -92,7 +96,11 @@ def signup():
 
 @app.route('/upload')
 def form():
-    return render_template('uploadform.html', username= session.get("username")) 
+    if not session.get("username"):
+        # if not there in the session then redirect to the login page
+        return redirect("/login")
+    else:
+        return render_template('uploadform.html', username= session.get("username")) 
 
 @app.route('/cvrate', methods=["POST", "GET"])
 def cvrate():
@@ -102,7 +110,11 @@ def cvrate():
         dept=request.form.get("dept")
         addKeys=request.form.get("addKeys")
         return rankingHtml(keywords, experience, dept, addKeys)
-    return render_template('cvrate.html',username=session.get("username"))
+    elif not session.get("username"):
+        # if not there in the session then redirect to the login page
+        return redirect("/login")
+    else:
+        return render_template('cvrate.html',username=session.get("username"))
 
 
 
@@ -221,6 +233,9 @@ def linkedIn():
         yr, exp, ski, raw= linkedinScrape(link)
         insertToDb(intro, dept, yr, exp, ski, lang, raw, link)
         return("Successfully uploaded Linked IN id")
+    elif not session.get("username"):
+        # if not there in the session then redirect to the login page
+        return redirect("/login")
     else:
         return render_template('linkedInForm.html',username=session.get("username"))
         pass

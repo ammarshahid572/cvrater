@@ -4,6 +4,24 @@
 
         <title>Upload a CV</title>
     </head>
+    <script>
+        var xhr = new XMLHttpRequest();
+        function submitData(){
+        console.log("Posting data");
+        document.getElementById("loading").style.display="inline-block";
+        document.getElementById("tick").style.display="none";
+        xhr.open("POST", "/file"); 
+        xhr.onload = function(event){
+            console.log("success"); 
+            document.getElementById("loading").style.display="none";
+            document.getElementById("tick").style.display="inline-block";
+        } ; 
+        // or onerror, onabort
+        var formData = new FormData(document.getElementById("myForm")); 
+        xhr.send(formData);
+    return false;
+}
+    </script>
     <div class="bg-image"></div>
     <div class="topNav">
         <img src="/static/logo-solo.png" style="width: 50px; height: 50px; float: left; margin-left: 30px;"> 
@@ -12,8 +30,8 @@
        </div>
     <div class="content-item">
         <h1 style="color: black">Upload a CV</h1>
-        <form method=post action="/file" enctype=multipart/form-data>
-		<select id="dept" name="dept">
+        <form id="myForm" onsubmit="return submitData();">
+		<select id="dept" name="dept" required>
             <option value="" disabled selected>Choose relevant Dept:</option>	
 				<option value= "HR" > Human Resources </option>
 				<option value= "AD" > Admin </option>
@@ -23,4 +41,6 @@
           <input type=file name="file[]" multiple="">
           <input type=submit value=Upload>
         </form>
+        <img id="loading" src="/static/loader-blocks.gif" style="height: 150px; width: 300px; display: none;"> 
+        <img id="tick" src="/static/tick.png" style="height: 150px; width: 300px; display: none;"> 
     </div>
