@@ -21,12 +21,17 @@
         xhr.send(formData);
     return false;
 }
+
+
     </script>
     <div class="bg-image"></div>
     <div class="topNav">
         <img src="/static/logo-solo.png" style="width: 50px; height: 50px; float: left; margin-left: 30px;"> 
         <p style="float: left; color: white; font-family: Arial, Helvetica, sans-serif; margin-left: 10px;"><b>Intelligent Resume Classifier</b></p>
-         <p style="float: right; color: white;"> {{username}}</p>
+        <a href="/logout" style="height: auto; padding: none; float: right"
+      >logout</a
+    >
+        <p style="float: right; color: white;"> {{username}}</p>
        </div>
     <div class="content-item">
         <h1 style="color: black">Extract from LinkedIn</h1>

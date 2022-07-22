@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 import os
 import json
 import re
@@ -6,7 +7,7 @@ from werkzeug.utils import secure_filename
 from flask_session import Session
 from expExtraction import expExtract
 from linkedInscraper import linkedinScrape
-from datetime import timedelta
+from datetime import timedelta 
 UPLOAD_FOLDER = 'D:\\Python\\Flask\\FlaskFIles'
 ALLOWED_EXTENSIONS = {'docx'}
 
@@ -46,6 +47,10 @@ def insertToDb(intro, dept, yr, exp, ski, lan, raw, filename):
 
     print(mycursor.rowcount, "record inserted.")
 
+@app.route("/logout")
+def logout():
+    session['username']=NULL
+    return redirect("/login")
 
 
 @app.route("/")
@@ -258,8 +263,8 @@ def upload_file():
                 dept= request.form.get("dept")
                 filename = secure_filename(file.filename)
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                filename= "/CVs/"+filename
-                intro,yr,exp,ski,lang,raw=expExtract(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                filename= os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                intro,yr,exp,ski,lang,raw=expExtract(filename)
                 insertToDb(intro, dept, yr, exp, ski, lang, raw, filename)
                 
 ##    return "file:"+filename+" uploaded"

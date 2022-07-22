@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 import time
 import re
 usernameK="username"
-password="paass"
+password="password"
 # Creating a webdriver instance
 driver = webdriver.Chrome(r"ChromeDriver/chromedriver.exe")
 # This instance will be used to log into LinkedIn
