@@ -92,9 +92,9 @@ def signup():
         password= request.form.get("password")
         user_type= request.form.get("user_type")
         mycursor = mydb.cursor()
-        query= "INSERT INTO login (`id`, `username`, `password`, `email`, `user_type`) VALUES ('{}','{}', '{}', '{}')".format(username,password, email, user_type)
+        query= "INSERT INTO login (`username`, `password`, `email`, `user_type`) VALUES ('{}','{}', '{}', '{}')".format(username,password, email, user_type)
         mycursor.execute(query)
-        myresult = mycursor.fetchall()
+        mydb.commit()
         return redirect("/")
     return render_template("signup.html")
 
