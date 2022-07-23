@@ -265,6 +265,7 @@ def upload_file():
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 filename= os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 intro,yr,exp,ski,lang,raw=expExtract(filename)
+                filename="/CVs/"+file.filename
                 insertToDb(intro, dept, yr, exp, ski, lang, raw, filename)
                 
 ##    return "file:"+filename+" uploaded"
